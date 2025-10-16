@@ -1,0 +1,16 @@
+//@version=5
+indicator("Countdown to Bar Close (Live Refresh)", overlay=true)
+
+// Trick to force updates using a fast-ticking symbol
+_ = request.security("BINANCE:BTCUSDT", timeframe.period, close)
+
+ms_remaining = math.max(0, time_close - timenow)
+sec_remaining = math.floor(ms_remaining / 1000)
+min_part = math.floor(sec_remaining / 60)
+sec_part = sec_remaining % 60
+
+sec_str = (sec_part < 10 ? "0" : "") + str.tostring(sec_part)
+txt = "⏳ " + str.tostring(min_part) + ":" + sec_str
+
+var table t = table.new(position.top_right, 1, 1)
+table.cell(t, 0, 0, txt, text_color=color.white, bgcolor=color.new(color.black, 70), text_size=size.large)
